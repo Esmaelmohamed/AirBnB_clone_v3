@@ -1,8 +1,8 @@
 #!/usr/bin/python3
-"""Index file for the Flask application"""
+"""API endpoints for status and statistics"""
 
-from flask import jsonify
 from api.v1.views import app_views
+from flask import jsonify
 from models import storage
 from models.user import User
 from models.place import Place
@@ -11,7 +11,7 @@ from models.city import City
 from models.amenity import Amenity
 from models.review import Review
 
-# Mapping of classes to their names
+# Dictionary mapping object types to their corresponding classes
 classes = {
     "users": User,
     "places": Place,
@@ -21,17 +21,15 @@ classes = {
     "reviews": Review
 }
 
-
 @app_views.route('/status', methods=['GET'])
 def status():
-    '''Route to check the status of the API'''
+    '''Endpoint to check the status of the API'''
     return jsonify({'status': 'OK'})
-
 
 @app_views.route('/stats', methods=['GET'])
 def count():
-    '''Retrieve the count of each object type'''
+    '''Endpoint to retrieve the count of objects by type'''
     count_dict = {}
-    for key, cls in classes.items():
-        count_dict[key] = storage.count(cls)
+    for cls_name, cls in classes.items():
+        count_dict[cls_name] = storage.count(cls)
     return jsonify(count_dict)
