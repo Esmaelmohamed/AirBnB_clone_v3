@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-"""API endpoints for status and statistics"""
+"""Defines routes for status and statistics endpoints"""
 
 from api.v1.views import app_views
 from flask import jsonify
@@ -13,12 +13,12 @@ from models.review import Review
 
 # Dictionary mapping object types to their corresponding classes
 classes = {
-    "users": User,
-    "places": Place,
-    "states": State,
-    "cities": City,
-    "amenities": Amenity,
-    "reviews": Review
+    "users": "User",
+    "places": "Place",
+    "states": "State",
+    "cities": "City",
+    "amenities": "Amenity",
+    "reviews": "Review"
 }
 
 @app_views.route('/status', methods=['GET'])
