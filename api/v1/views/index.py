@@ -1,33 +1,37 @@
 #!/usr/bin/python3
-'''API for status and statistics of various models'''
+"""Index file for the Flask application"""
 
-from flask import Flask, jsonify
+from flask import jsonify
 from api.v1.views import app_views
 from models import storage
-from models.state import State
 from models.user import User
-from models.amenity import Amenity
-from models.city import City
 from models.place import Place
+from models.state import State
+from models.city import City
+from models.amenity import Amenity
 from models.review import Review
 
+# Mapping of classes to their names
+classes = {
+    "users": User,
+    "places": Place,
+    "states": State,
+    "cities": City,
+    "amenities": Amenity,
+    "reviews": Review
+}
 
-@app_views.route('/status', strict_slashes=False)
-def get_status():
-    '''Return the API status'''
-    return jsonify(status='OK')
+
+@app_views.route('/status', methods=['GET'])
+def status():
+    '''Route to check the status of the API'''
+    return jsonify({'status': 'OK'})
 
 
-@app_views.route('/stats', strict_slashes=False)
-def get_stats():
-    '''Return the count of all objects by type'''
-    model_classes = {
-        'states': State,
-        'users': User,
-        'amenities': Amenity,
-        'cities': City,
-        'places': Place,
-        'reviews': Review
-    }
-    counts = {key: storage.count(model) for key, model in model_classes.items()}
-    return jsonify(counts)
+@app_views.route('/stats', methods=['GET'])
+def count():
+    '''Retrieve the count of each object type'''
+    count_dict = {}
+    for key, cls in classes.items():
+        count_dict[key] = storage.count(cls)
+    return jsonify(count_dict)
